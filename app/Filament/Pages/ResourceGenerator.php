@@ -10,11 +10,19 @@ use Filament\Pages\Page;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
 class ResourceGenerator extends Page
 {
+    use HasPageShield;
+    protected function getShieldRedirectPath(): string {
+        return '/'; // redirect to the root index...
+    }
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
     protected static string $view = 'filament.pages.resource-generator';
+    protected static ?string $navigationGroup = 'Generate';
+    protected static ?string $navigationLabel = 'Resource Generator';
+
 
     public $resourceName;
     public $fields = [];
@@ -32,7 +40,6 @@ class ResourceGenerator extends Page
             
             Repeater::make('fields')
                 ->label('Fields')
-                // ->helperText('Nama resource akan dijadikan nama Model, Migration, dan Filament Resource.')
                 ->hint(
                     str('[Documentation](/admin/system-documentation)') // Pastikan URL benar
                         ->inlineMarkdown()
@@ -47,20 +54,69 @@ class ResourceGenerator extends Page
                         ->label('Tipe Field')
                         ->required()
                         ->options([
+                            'bigIncrements' => 'Big Increments',
+                            'bigInteger' => 'Big Integer',
+                            'binary' => 'Binary',
+                            'boolean' => 'Boolean',
+                            'char' => 'Char',
+                            'date' => 'Date',
+                            'dateTime' => 'DateTime',
+                            'dateTimeTz' => 'DateTime with Timezone',
+                            'decimal' => 'Decimal',
+                            'double' => 'Double',
+                            'enum' => 'Enum',
+                            'float' => 'Float',
+                            'foreignId' => 'Foreign ID',
+                            'geometry' => 'Geometry',
+                            'geometryCollection' => 'Geometry Collection',
+                            'increments' => 'Increments',
+                            'integer' => 'Integer',
+                            'ipAddress' => 'IP Address',
+                            'json' => 'JSON',
+                            'jsonb' => 'JSONB',
+                            'lineString' => 'Line String',
+                            'longText' => 'Long Text',
+                            'macAddress' => 'MAC Address',
+                            'mediumIncrements' => 'Medium Increments',
+                            'mediumInteger' => 'Medium Integer',
+                            'mediumText' => 'Medium Text',
+                            'morphs' => 'Morphs',
+                            'multiLineString' => 'Multi Line String',
+                            'multiPoint' => 'Multi Point',
+                            'multiPolygon' => 'Multi Polygon',
+                            'nullableMorphs' => 'Nullable Morphs',
+                            'nullableTimestamps' => 'Nullable Timestamps',
+                            'nullableUuidMorphs' => 'Nullable UUID Morphs',
+                            'point' => 'Point',
+                            'polygon' => 'Polygon',
+                            'rememberToken' => 'Remember Token',
+                            'set' => 'Set',
+                            'smallIncrements' => 'Small Increments',
+                            'smallInteger' => 'Small Integer',
+                            'softDeletes' => 'Soft Deletes',
+                            'softDeletesTz' => 'Soft Deletes with Timezone',
                             'string' => 'String',
                             'text' => 'Text',
-                            'longText' => 'Long Text',
-                            'integer' => 'Integer',
-                            'decimal' => 'Decimal',
-                            'boolean' => 'Boolean',
-                            'date' => 'Date',
-                            'datetime' => 'DateTime',
-                            'json' => 'JSON',
+                            'time' => 'Time',
+                            'timeTz' => 'Time with Timezone',
+                            'timestamp' => 'Timestamp',
+                            'timestampTz' => 'Timestamp with Timezone',
+                            'timestamps' => 'Timestamps',
+                            'timestampsTz' => 'Timestamps with Timezone',
+                            'tinyIncrements' => 'Tiny Increments',
+                            'tinyInteger' => 'Tiny Integer',
+                            'unsignedBigInteger' => 'Unsigned Big Integer',
+                            'unsignedDecimal' => 'Unsigned Decimal',
+                            'unsignedInteger' => 'Unsigned Integer',
+                            'unsignedMediumInteger' => 'Unsigned Medium Integer',
+                            'unsignedSmallInteger' => 'Unsigned Small Integer',
+                            'unsignedTinyInteger' => 'Unsigned Tiny Integer',
                             'uuid' => 'UUID',
-                            'foreignId' => 'Foreign ID (Relationship)',
+                            'uuidMorphs' => 'UUID Morphs',
+                            'year' => 'Year',
                         ])
                         ->reactive(),
-                    Toggle::make('nullable')
+                        Toggle::make('nullable')
                         ->label('Nullable')
                         ->default(false),
                     Toggle::make('unique')
@@ -68,7 +124,34 @@ class ResourceGenerator extends Page
                         ->default(false),
                     TextInput::make('default')
                         ->label('Default Value')
-                        ->visible(fn (callable $get) => in_array($get('type'), ['string', 'integer', 'decimal', 'boolean'])),
+                        ->visible(fn (callable $get) => in_array($get('type'), ['string', 'integer', 'decimal', 'boolean'])), 
+                    TextInput::make('comment')
+                        ->label('Comment')
+                        ->visible(fn (callable $get) => $get('type') !== 'id'),
+                    Toggle::make('unsigned')
+                        ->label('Unsigned')
+                        ->default(false)
+                        ->visible(fn (callable $get) => in_array($get('type'), ['integer', 'bigInteger', 'decimal', 'unsignedInteger', 'unsignedBigInteger', 'unsignedDecimal'])),
+                    Toggle::make('autoIncrement')
+                        ->label('Auto Increment')
+                        ->default(false)
+                        ->visible(fn (callable $get) => in_array($get('type'), ['integer', 'bigInteger', 'increments', 'bigIncrements'])), 
+                    Toggle::make('index')
+                        ->label('Index')
+                        ->default(false),
+                        Toggle::make('fulltext')
+                        ->label('Fulltext Index')
+                        ->default(false)
+                        ->visible(fn (callable $get) => in_array($get('type'), ['text', 'longText', 'mediumText'])),
+                        Toggle::make('useCurrent')
+                        ->label('Use Current Timestamp')
+                        ->default(false)
+                        ->visible(fn (callable $get) => in_array($get('type'), ['timestamp', 'dateTime', 'timestamps'])),
+                    
+                    Toggle::make('useCurrentOnUpdate')
+                        ->label('Use Current Timestamp on Update')
+                        ->default(false)
+                        ->visible(fn (callable $get) => in_array($get('type'), ['timestamp', 'dateTime', 'timestamps'])),
                 ])
                 ->addActionLabel('Tambah Field')
                 ->defaultItems(1)
@@ -97,58 +180,72 @@ class ResourceGenerator extends Page
 
     protected function getExistingModels(): array
     {
-        // Ambil semua file di direktori app/Models
-        $modelFiles = File::files(app_path('Models'));
-
-        // Ambil nama model dari file
         $models = [];
-        foreach ($modelFiles as $file) {
-            $models[] = Str::before($file->getFilename(), '.php');
+    
+        // Cek apakah direktori app/Models ada
+        if (File::exists(app_path('Models'))) {
+            // Ambil semua file di direktori app/Models
+            $modelFiles = File::files(app_path('Models'));
+    
+            // Ambil nama model dari file
+            foreach ($modelFiles as $file) {
+                $models[] = Str::before($file->getFilename(), '.php');
+            }
         }
-
+    
         // Format untuk opsi dropdown
         return array_combine($models, $models);
     }
 
     public function generateResource()
     {
-        // Validasi input
-        $this->validate([
-            'resourceName' => 'required|string',
-            'fields' => 'required|array',
-            'relationships' => 'array',
-        ]);
-
-        // Generate Model
-        Artisan::call('make:model', [
-            'name' => $this->resourceName,
-        ]);
-
-        // Update isi model dengan $fillable, HasFactory, dan relasi
-        $this->updateModelFile();
-
-        // Generate Migration
-        $migrationName = 'create_' . Str::snake(Str::plural($this->resourceName)) . '_table';
-        Artisan::call('make:migration', [
-            'name' => $migrationName,
-            '--create' => Str::snake(Str::plural($this->resourceName)),
-        ]);
-
-        // Update isi migration berdasarkan field yang diinput
-        $this->updateMigrationFile($migrationName);
-
-        // Jalankan migrasi
-        Artisan::call('migrate');
-
-        // Generate Filament Resource
-        Artisan::call('make:filament-resource', [
-            'name' => $this->resourceName,
-            '--generate' => true,
-        ]);
-
-        // Beri notifikasi sukses
-        session()->flash('success', 'Resource berhasil dibuat!');
-
+        try {
+            // Validasi input
+            $this->validate([
+                'resourceName' => 'required|string',
+                'fields' => 'required|array',
+                'relationships' => 'array',
+            ]);
+    
+            // Generate Model
+            Artisan::call('make:model', [
+                'name' => $this->resourceName,
+            ]);
+    
+            // Update isi model dengan $fillable, HasFactory, dan relasi
+            $this->updateModelFile();
+    
+            // Generate Migration
+            $migrationName = 'create_' . Str::snake(Str::plural($this->resourceName)) . '_table';
+            Artisan::call('make:migration', [
+                'name' => $migrationName,
+                '--create' => Str::snake(Str::plural($this->resourceName)),
+            ]);
+    
+            // Update isi migration berdasarkan field yang diinput
+            $this->updateMigrationFile($migrationName);
+    
+            // Jalankan migrasi
+            Artisan::call('migrate');
+    
+            // Generate Filament Resource
+            Artisan::call('make:filament-resource', [
+                'name' => $this->resourceName,
+                '--generate' => true,
+            ]);
+    
+            // Generate Shield permissions
+            Artisan::call('shield:generate', [
+                '--all' => true,
+            ]);
+    
+            // Beri notifikasi sukses
+            session()->flash('success', 'Resource berhasil dibuat dan permissions untuk Shield telah di-generate!');
+        } catch (\Exception $e) {
+            // Beri notifikasi error
+            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    
         // Reset form setelah proses selesai
         $this->reset(['resourceName', 'fields', 'relationships']);
     }
@@ -219,15 +316,21 @@ class ResourceGenerator extends Page
     {
         // Cari file migration yang baru dibuat
         $migrationFiles = glob(database_path('migrations/*.php'));
+        if (empty($migrationFiles)) {
+            return;
+        }
+    
         $latestMigrationFile = end($migrationFiles);
-
+    
         // Baca isi file migration
         $content = file_get_contents($latestMigrationFile);
-
+    
         // Buat definisi field berdasarkan input pengguna
         $fieldsDefinition = '';
         foreach ($this->fields as $field) {
             $fieldDefinition = "\$table->{$field['type']}('{$field['name']}')";
+    
+            // Tambahkan opsi tambahan
             if ($field['nullable']) {
                 $fieldDefinition .= '->nullable()';
             }
@@ -237,26 +340,39 @@ class ResourceGenerator extends Page
             if (isset($field['default'])) {
                 $fieldDefinition .= '->default(' . $field['default'] . ')';
             }
+            if (isset($field['comment'])) {
+                $fieldDefinition .= '->comment("' . $field['comment'] . '")';
+            }
+            if ($field['unsigned']) {
+                $fieldDefinition .= '->unsigned()';
+            }
+            if ($field['autoIncrement']) {
+                $fieldDefinition .= '->autoIncrement()';
+            }
+            if ($field['index']) {
+                $fieldDefinition .= '->index()';
+            }
+            if ($field['fulltext']) {
+                $fieldDefinition .= '->fulltext()';
+            }
+            if ($field['useCurrent']) {
+                $fieldDefinition .= '->useCurrent()';
+            }
+            if ($field['useCurrentOnUpdate']) {
+                $fieldDefinition .= '->useCurrentOnUpdate()';
+            }
+    
             $fieldDefinition .= ";\n            ";
             $fieldsDefinition .= $fieldDefinition;
         }
-
-        // Tambahkan foreign key untuk relasi
-        foreach ($this->relationships as $relationship) {
-            if ($relationship['type'] === 'belongsTo') {
-                $relatedModel = $relationship['relatedModel'];
-                $foreignKey = Str::snake($relatedModel) . '_id';
-                $fieldsDefinition .= "\$table->foreignId('$foreignKey')->constrained()->onDelete('cascade');\n            ";
-            }
-        }
-
+    
         // Update isi file migration
         $content = str_replace(
             '$table->id();',
             '$table->id();' . "\n            " . $fieldsDefinition,
             $content
         );
-
+    
         // Simpan perubahan ke file migration
         file_put_contents($latestMigrationFile, $content);
     }
