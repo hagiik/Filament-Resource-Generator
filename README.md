@@ -1,10 +1,10 @@
-### **Filament Generator:**
-**Filament Resource Generator with Custom Form Builder**
+### **Starter Kits Filament Generator:**
+**Starter Kits Filament Resource Generator with Custom Form Builder**
 
 ---
 
 ### **Deskripsi:**
-Proyek ini adalah alat untuk menghasilkan **Filament Resources** secara otomatis, termasuk Model, Migration, dan Form Builder yang dapat disesuaikan secara visual. Dengan alat ini, Anda dapat membuat dan mengelola resources di Laravel Filament tanpa perlu menulis kode berulang. Proyek ini juga mendukung pembuatan form dinamis dengan drag-and-drop, yang memungkinkan pengguna mendesain form sesuai kebutuhan.
+Proyek ini adalah alat untuk menghasilkan **Filament Resources** secara otomatis, termasuk Model, Migration, dan Form Builder yang dapat disesuaikan secara visual. Starter Kits ini, Anda dapat membuat dan mengelola resources di Laravel Filament tanpa perlu menulis kode berulang. Proyek ini juga mendukung pembuatan form dinamis dengan drag-and-drop, yang memungkinkan pengguna mendesain form sesuai kebutuhan.
 
 ---
 
@@ -34,7 +34,7 @@ Proyek ini adalah alat untuk menghasilkan **Filament Resources** secara otomatis
 #### 1. **Instalasi**:
 - Clone repositori ini ke dalam proyek Laravel Anda:
   ```bash
-  git clone https://github.com/hagiik/repo-name.git
+  git clone https://github.com/hagiik/Filament-Resource-Generator.git
   ```
 - Install dependencies:
   ```bash
@@ -111,4 +111,4 @@ Proyek ini dilisensikan di bawah **MIT License**. Lihat file [LICENSE](LICENSE) 
 ---
 
 ### **Catatan:**
-Proyek ini masih dalam pengembangan aktif. Jika Anda menemukan bug atau memiliki saran, silakan buka [issue](https://github.com/hagiik/repo-name/issues).
+Proyek ini masih dalam pengembangan aktif. Jika Anda menemukan bug atau memiliki saran, silakan buka [issue](https://github.com/hagiik/Filament-Resource-Generator/issues).
