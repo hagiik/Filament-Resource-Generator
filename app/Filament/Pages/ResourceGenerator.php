@@ -200,6 +200,11 @@ class ResourceGenerator extends Page
     public function generateResource()
     {
         try {
+            // Pastikan STDIN terdefinisi
+            if (!defined('STDIN')) {
+                define('STDIN', fopen('php://stdin', 'r'));
+            }
+    
             // Validasi input
             $this->validate([
                 'resourceName' => 'required|string',
