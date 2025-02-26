@@ -282,6 +282,17 @@ class ResourceGenerator extends Page
                 '--generate' => true,
             ]);
     
+              // Generate Shield permissions dengan opsi --panel=admin
+              $exitCode = Artisan::call('shield:generate', [
+                '--all' => true,
+                '--panel' => 'admin', // Berikan input panel secara otomatis
+            ]);
+    
+            // Debugging: Tampilkan output perintah
+            $output = Artisan::output();
+            logger('Shield generate output: ' . $output);
+    
+
             // Beri notifikasi sukses
             session()->flash('success', 'Resource berhasil dibuat dan Silahkan Klik tombol Di kanan atas untuk permissions Shield di-generate!');
         } catch (\Exception $e) {
