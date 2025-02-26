@@ -6,6 +6,8 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Pages\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -27,6 +29,52 @@ class ResourceGenerator extends Page
     public $resourceName;
     public $fields = [];
     public $relationships = [];
+    protected function getActions(): array
+    {
+        return [
+            Action::make('generatePermissions') // Tombol baru untuk generate permissions
+                ->label('Generate Permissions')
+                ->action(function () {
+                    try {
+                        // Jalankan perintah shield:generate --all
+                        Artisan::call('shield:generate', [
+                            '--all' => true,
+                            '--panel' => 'admin', // Sesuaikan dengan panel yang Anda gunakan
+                        ]);
+    
+                        // Ambil output dari perintah
+                        $output = Artisan::output();
+    
+                        // Periksa apakah ada yang di-generate
+                        if (str_contains($output, 'Nothing to generate')) {
+                            // Beri notifikasi bahwa tidak ada yang di-generate
+                            Notification::make()
+                                ->title('No Permissions to Generate')
+                                ->body('There are no new permissions to generate.')
+                                ->info()
+                                ->send();
+                        } else {
+                            // Beri notifikasi sukses
+                            Notification::make()
+                                ->title('Permissions Generated Successfully')
+                                ->body('Permissions for the admin panel have been generated.')
+                                ->success()
+                                ->send();
+                        }
+                    } catch (\Exception $e) {
+                        // Beri notifikasi error
+                        Notification::make()
+                            ->title('Failed to Generate Permissions')
+                            ->body('Error: ' . $e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                })
+                ->icon('heroicon-o-cog') // Icon untuk tombol
+                ->color('success') // Warna tombol
+                ->requiresConfirmation(), // Konfirmasi sebelum menjalankan
+        ];
+    }
 
     protected function getFormSchema(): array
     {
@@ -200,11 +248,6 @@ class ResourceGenerator extends Page
     public function generateResource()
     {
         try {
-            // Pastikan STDIN terdefinisi
-            if (!defined('STDIN')) {
-                define('STDIN', fopen('php://stdin', 'r'));
-            }
-    
             // Validasi input
             $this->validate([
                 'resourceName' => 'required|string',
@@ -239,13 +282,8 @@ class ResourceGenerator extends Page
                 '--generate' => true,
             ]);
     
-            // Generate Shield permissions
-            Artisan::call('shield:generate', [
-                '--all' => true,
-            ]);
-    
             // Beri notifikasi sukses
-            session()->flash('success', 'Resource berhasil dibuat dan permissions untuk Shield telah di-generate!');
+            session()->flash('success', 'Resource berhasil dibuat dan Silahkan Klik tombol Di kanan atas untuk permissions Shield di-generate!');
         } catch (\Exception $e) {
             // Beri notifikasi error
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
