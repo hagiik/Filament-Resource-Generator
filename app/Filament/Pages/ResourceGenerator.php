@@ -17,9 +17,9 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 class ResourceGenerator extends Page
 {
     use HasPageShield;
-    protected function getShieldRedirectPath(): string {
-        return '/'; // redirect to the root index...
-    }
+    // protected function getShieldRedirectPath(): string {
+    //     return '/'; // redirect to the root index...
+    // }
     protected static ?string $navigationIcon = 'heroicon-o-document-plus';
     protected static string $view = 'filament.pages.resource-generator';
     protected static ?string $navigationGroup = 'Generate';
