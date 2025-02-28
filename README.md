@@ -42,24 +42,74 @@ Proyek ini adalah alat untuk menghasilkan **Filament Resources** secara otomatis
   npm install
   ```
 
-#### 2. **Generate Resource**:
+#### 2. **Buat Role Baru dan Atur Akses**:
+- Buka halaman **Roles**.
+- Buat role baru, misalnya `Admin`.
+- Ceklis seluruh akses yang tersedia untuk role tersebut.
+- Simpan perubahan.
+
+#### 3. **Tambahkan Role ke User**:
+- Buka halaman **Users**.
+- Pilih akun yang ingin diberikan role tersebut.
+- Tambahkan role yang sudah dibuat sebelumnya.
+- Simpan perubahan.
+- Refresh kembali browser.
+- Halaman **Resource Generator** akan muncul.
+
+#### 4. **Generate Resource**:
 - Buka halaman **Resource Generator** di panel admin Filament.
 - Isi nama resource, fields, dan relationships yang diinginkan.
 - Klik tombol **Generate** untuk membuat Model, Migration, dan Filament Resource secara otomatis.
 
-#### 3. **Custom Form Builder**:
+#### 5. **Custom Form Builder**:
 - Buka halaman **Custom Form Builder**.
 - Drag-and-drop fields yang dibutuhkan ke dalam form.
 - Simpan konfigurasi form, dan sistem akan secara otomatis membuat migration dan form yang sesuai.
 
-#### 4. **Jalankan Migration**:
+#### 6. **Jalankan Migration**:
 - Setelah resource dibuat, jalankan migration:
   ```bash
   php artisan migrate
   ```
 
-#### 5. **Akses Resource**:
+#### 7. **Akses Resource**:
 - Resource yang telah dibuat dapat diakses melalui menu di panel admin Filament.
+
+---
+
+### **Penanganan Git Remote untuk Proyek Ini**
+Jika Anda ingin meng-*clone* proyek ini dan menyimpannya di repository Anda sendiri tanpa mempertahankan *branch* utama dari repo asal, ikuti langkah-langkah berikut:
+
+#### **1. Clone Repository Tanpa Riwayat Git**
+```bash
+git clone --depth 1 https://github.com/hagiik/Filament-Resource-Generator.git my-project
+cd my-project
+rm -rf .git  # Menghapus riwayat Git lama
+git init     # Inisialisasi ulang Git untuk repo baru
+```
+
+#### **2. Tambahkan Repository Baru**
+Buat repository kosong di GitHub/GitLab, lalu tambahkan sebagai *remote origin*:
+```bash
+git remote add origin https://github.com/username/repository-baru.git
+git branch -M main
+git push -u origin main
+```
+
+#### **3. Jika Salah Memasukkan URL Remote**
+Cek daftar *remote* yang sudah ditambahkan:
+```bash
+git remote -v
+```
+Hapus *remote* yang salah:
+```bash
+git remote remove origin
+```
+Tambahkan ulang dengan URL yang benar:
+```bash
+git remote add origin https://github.com/username/repository-benar.git
+git push -u origin main
+```
 
 ---
 
@@ -112,3 +162,4 @@ Proyek ini dilisensikan di bawah **MIT License**. Lihat file [LICENSE](LICENSE) 
 
 ### **Catatan:**
 Proyek ini masih dalam pengembangan aktif. Jika Anda menemukan bug atau memiliki saran, silakan buka [issue](https://github.com/hagiik/Filament-Resource-Generator/issues).
+
